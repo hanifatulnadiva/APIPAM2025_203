@@ -73,4 +73,28 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// Route untuk mengupdate data appointment secara lengkap
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const { idpasien, iddokter, tanggal, jam, keluhan, status } = req.body;
+
+    const sql = `
+        UPDATE appointment 
+        SET idpasien = ?, iddokter = ?, tanggal = ?, jam = ?, keluhan = ?, status = ? 
+        WHERE idappointment = ?
+    `;
+
+    db.query(
+        sql, 
+        [idpasien, iddokter, tanggal, jam, keluhan, status, id], 
+        (err, result) => {
+            if (err) {
+                console.error("Update Error:", err.message);
+                return res.status(500).send(err);
+            }
+            res.json({ message: "Appointment berhasil diperbarui" });
+        }
+    );
+});
+
 module.exports = router;
